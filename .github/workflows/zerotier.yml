@@ -23,5 +23,5 @@ jobs:
           
           $URI = "https://api.zerotier.com/api/v1/network/${{ secrets.ZEROTIER_NETWORKID }}/member/{0}" -f $ClientId
           $Token = ConvertTo-SecureString -AsPlainText -Force -String ${{ secrets.ZEROTIER_API_KEY }}
-          $Body = "{'config': {'authorized': true}}"
+          $Body = '{"config": {"authorized": true}}''
           Invoke-RestMethod -Uri $URI -Method Post -Authentication Bearer -Token $Token -Body $Body
