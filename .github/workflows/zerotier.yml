@@ -8,20 +8,52 @@ jobs:
     steps:
       - name: Install ZeroTier Client
         run: |
+          echo "Installing ZeroTier Client"
           curl -s https://install.zerotier.com | sudo bash
-
-      - name: Join Device to ZeroTier Network
-        run: |
-          sudo zerotier-cli join ${{ secrets.ZEROTIER_NETWORKID }}
 
       - name: Authorize ZeroTier Client
         shell: pwsh
         run: |
-          $result = sudo zerotier-cli info 
-          $result -match '\w{10}'
-          $ClientId = $matches[0]
-          
-          $URI = "https://api.zerotier.com/api/v1/network/${{ secrets.ZEROTIER_NETWORKID }}/member/{0}" -f $ClientId
-          $Token = ConvertTo-SecureString -AsPlainText -Force -String ${{ secrets.ZEROTIER_API_KEY }}
-          $Body = '{"config": {"authorized": true}}'
-          Invoke-RestMethod -Uri $URI -Method Post -Authentication Bearer -Token $Token -Body $Body
+          # Get ZeroTier Client information
+          $result = sudo zerotier-cli info
+          Write-Output "ZeroTier CLI Info: $result"
+
+          # Extract Client ID
+          if ($result -match '([a-z0-9]{10})') {
+            $ClientId = $matches[1]
+            Write-Output "Extracted Client ID: $ClientId"
+          } else {
+            throw "Failed to extract Client ID from ZeroTier info"
+          }
+
+          # Prepare API request parameters
+          $networkId = "${{ secrets.ZEROTIER_NETWORKID }}"
+          $apiKey = "${{ secrets.ZEROTIER_API_KEY }}"
+          $membersUri = "https://api.zerotier.com/api/v1/network/$networkId/member"
+          $Headers = @{
+            "Authorization" = "Bearer $apiKey"
+            "Content-Type"  = "application/json"
+          }
+
+          # Check if Client ID exists in the network
+          $members = Invoke-RestMethod -Uri $membersUri -Headers $Headers -Method Get
+          $existingMember = $members | Where-Object { $_.nodeId -eq $ClientId }
+
+          if ($existingMember) {
+            Write-Output "Client ID $ClientId already exists in the network. Skipping join step."
+          } else {
+            Write-Output "Client ID $ClientId does not exist in the network. Joining network."
+            # Join the network
+            sudo zerotier-cli join $networkId
+
+            # Authorize the client
+            $URI = "https://api.zerotier.com/api/v1/network/$networkId/member/$ClientId"
+            $Body = @{
+              config = @{
+                authorized = $true
+              }
+            } | ConvertTo-Json
+
+            Write-Output "Authorizing Client ID $ClientId"
+            Invoke-RestMethod -Uri $URI -Method Post -Headers $Headers -Body $Body
+          }
