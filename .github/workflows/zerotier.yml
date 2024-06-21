@@ -20,7 +20,7 @@ jobs:
 
           # Extract Client ID
           if ($result -match '([a-z0-9]{10})') {
-            $ClientId = $matches[1]
+            $ClientId = $matches[0]
             Write-Output "Extracted Client ID: $ClientId"
           } else {
             throw "Failed to extract Client ID from ZeroTier info"
