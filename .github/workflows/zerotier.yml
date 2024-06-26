@@ -81,7 +81,7 @@ jobs:
       - name: Test DNS Resolution Against Route 53 Resolver Using Github Actions
         shell: pwsh
         run: |
-          ping -c 5 ip-10-98-10-230.ec2.internal
+          nslookup ip-10-98-10-230.ec2.internal 10.98.0.2
 
 
 
