@@ -28,7 +28,7 @@ jobs:
 
           # Prepare API request parameters (Global Scope Access Varibles)
           $networkId = '${{ secrets.ZEROTIER_NETWORKID }}'
-          $apiKey = ConvertTo-SecureString -AsPlainText -Force String ${{ secrets.ZEROTIER_API_KEY }}
+          $apiKey = '${{ secrets.ZEROTIER_API_KEY }}'
           $membersUri = 'https://api.zerotier.com/api/v1/network/$networkId/member/{0}' -f $ClientId
           $Headers = @{
             "Authorization" = "Bearer $apiKey"
@@ -56,3 +56,6 @@ jobs:
             Write-Output "Authorizing Client ID $ClientId"
             Invoke-RestMethod -Uri $membersUri -Headers $Headers -Body $Body -Method Post
           }
+
+# Unused Code
+# ConvertTo-SecureString -AsPlainText -Force String
