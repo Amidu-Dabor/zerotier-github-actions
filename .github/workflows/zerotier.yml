@@ -14,7 +14,7 @@ jobs:
       - name: Authorize ZeroTier Client
         shell: pwsh
         run: |
-          # Get ZeroTier Client information
+          # Get ZeroTier Client information (Global Scope Access Varible)
           $result = sudo zerotier-cli info
           Write-Output "ZeroTier CLI Info: $result"
 
@@ -26,10 +26,10 @@ jobs:
             throw "Failed to extract Client ID from ZeroTier info"
           }
 
-          # Prepare API request parameters
-          $networkId = "${{ secrets.ZEROTIER_NETWORKID }}"
-          $apiKey = "${{ secrets.ZEROTIER_API_KEY }}"
-          $membersUri = "https://api.zerotier.com/api/v1/network/$networkId/member"
+          # Prepare API request parameters (Global Scope Access Varibles)
+          $networkId = '${{ secrets.ZEROTIER_NETWORKID }}'
+          $apiKey = ConvertTo-SecureString -AsPlainText -Force String ${{ secrets.ZEROTIER_API_KEY }}
+          $membersUri = 'https://api.zerotier.com/api/v1/network/$networkId/member/{0}' -f $ClientId
           $Headers = @{
             "Authorization" = "Bearer $apiKey"
             "Content-Type"  = "application/json"
@@ -47,7 +47,6 @@ jobs:
             sudo zerotier-cli join $networkId
 
             # Authorize the client
-            $URI = "https://api.zerotier.com/api/v1/network/$networkId/member/$ClientId"
             $Body = @{
               config = @{
                 authorized = $true
@@ -55,5 +54,5 @@ jobs:
             } | ConvertTo-Json
 
             Write-Output "Authorizing Client ID $ClientId"
-            Invoke-RestMethod -Uri $URI -Method Post -Headers $Headers -Body $Body
+            Invoke-RestMethod -Uri $membersUri -Headers $Headers -Body $Body -Method Post
           }
