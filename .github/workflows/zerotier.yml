@@ -76,9 +76,8 @@ jobs:
         shell: pwsh
         run: |
           ping -c 10 10.98.10.230
-          ping -c 5 ip-10-98-10-230.ec2.internal
 
-      - name: Test DNS Resolution Against Route 53 Resolver Using Github Actions
+      - name: Test DNS Resolution Against Route 53 Resolver Via Github Actions
         shell: pwsh
         run: |
           nslookup ip-10-98-10-230.ec2.internal 10.98.0.2
