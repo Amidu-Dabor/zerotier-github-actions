@@ -29,15 +29,14 @@ jobs:
           # Prepare API request parameters
           $networkId = "${{ secrets.ZEROTIER_NETWORKID }}"
           $apiKey = "${{ secrets.ZEROTIER_API_KEY }}"
-          $membersUri = "https://my.zerotier.com/api/network/$networkId/member/$ClientId"
+          $Uri = "https://my.zerotier.com/api/v1/network/$networkId/member/$ClientId"
           $Headers = @{
             "Authorization" = "Bearer $apiKey"
           }
 
           # Check if Client ID exists in the network
           try {
-            $memberUri = "https://my.zerotier.com/api/v1/network/$networkId/member/$ClientId"
-            $member = Invoke-RestMethod -Uri $memberUri -Headers $Headers -Method Get
+            $member = Invoke-RestMethod -Uri $Uri -Headers $Headers -Method Get
             $existingMember = $member.id -eq $ClientId
           } catch {
             Write-Output "Failed to retrieve member information. Status Code: $_.Exception.Response.StatusCode"
@@ -60,7 +59,7 @@ jobs:
             } | ConvertTo-Json
 
             Write-Output "Authorizing Client ID $ClientId"
-            Invoke-RestMethod -Uri $memberUri -Headers $Headers -Body $Body -Method Post
+            Invoke-RestMethod -Uri $Uri -Headers $Headers -Body $Body -Method Post
           }
 
       - name: Get the GitHub Actions runner's IP address
