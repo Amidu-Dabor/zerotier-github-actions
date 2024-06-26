@@ -62,6 +62,16 @@ jobs:
             Invoke-RestMethod -Uri $membersUri -Headers $Headers -Body $Body -Method Post
           }
 
+      - name: Test Connectivity to Zerotier vpc-Router
+        shell: pwsh
+        run: |
+          ping -c 10 192.168.196.98
+
+      - name: Test Connectivity to Zerotier vpc-Router
+        shell: pwsh
+        run: |
+          ping -c 10 10.98.10.59
+
 
 
 # Unused Code
