@@ -32,7 +32,6 @@ jobs:
           $membersUri = "https://api.zerotier.com/api/v1/network/$networkId/member/$ClientId"
           $Headers = @{
             "Authorization" = "Bearer $apiKey"
-            "Content-Type"  = "application/json"
           }
 
           # Check if Client ID exists in the network
