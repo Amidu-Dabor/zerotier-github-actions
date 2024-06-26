@@ -64,7 +64,7 @@ jobs:
 
       - name: Get the Github Actions runner's IP address
         shell: pwsh
-        run: curl ifconfig.co
+        run: curl https://ipinfo.io/ip
 
       - name: Test Github Actions Connectivity to VPC-Router on Zerotier network
         shell: pwsh
