@@ -28,7 +28,7 @@ jobs:
 
           # Prepare API request parameters
           $networkId = "${{ secrets.ZEROTIER_NETWORKID }}"
-          $apiKey = "${{ secrets.ZEROTIER_API_KEY }}"
+          $apiKey = ConvertTo-SecureString -AsPlainText -Force String ${{ secrets.ZEROTIER_API_KEY }}
           $Uri = "https://api.zerotier.com/api/v1/network/$networkId/member/{0}" -f $ClientId
 
           # Check if Client ID exists in the network
