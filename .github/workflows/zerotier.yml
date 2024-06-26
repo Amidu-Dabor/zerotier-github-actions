@@ -62,12 +62,16 @@ jobs:
             Invoke-RestMethod -Uri $membersUri -Headers $Headers -Body $Body -Method Post
           }
 
-      - name: Test Connectivity to Zerotier vpc-Router
+      - name: Get the Github Actions runner's IP address
+        shell: pwsh
+        run: curl ifconfig.co
+
+      - name: Test Github Actions Connectivity to VPC-Router on Zerotier network
         shell: pwsh
         run: |
           ping -c 10 192.168.196.98
 
-      - name: Test Connectivity to Zerotier vpc-Router
+      - name: Test Github Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
         shell: pwsh
         run: |
           ping -c 10 10.98.10.59
