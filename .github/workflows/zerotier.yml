@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install ZeroTier Client
-        shell: pwsh
         run: |
           echo "Installing ZeroTier Client"
           curl -s https://install.zerotier.com | sudo bash
@@ -37,8 +36,9 @@ jobs:
 
           # Check if Client ID exists in the network
           try {
-            $members = Invoke-RestMethod -Uri $membersUri -Headers $Headers -Method Get
-            $existingMember = $members.id -eq $ClientId
+            $memberUri = "https://my.zerotier.com/api/network/$networkId/member/$ClientId"
+            $member = Invoke-RestMethod -Uri $memberUri -Headers $Headers -Method Get
+            $existingMember = $member.id -eq $ClientId
           } catch {
             Write-Output "Failed to retrieve member information. Status Code: $_.Exception.Response.StatusCode"
             Write-Output $_.Exception.Message
@@ -60,23 +60,19 @@ jobs:
             } | ConvertTo-Json
 
             Write-Output "Authorizing Client ID $ClientId"
-            Invoke-RestMethod -Uri $membersUri -Headers $Headers -Body $Body -Method Post
+            Invoke-RestMethod -Uri $memberUri -Headers $Headers -Body $Body -Method Post
           }
 
       - name: Get the GitHub Actions runner's IP address
-        shell: pwsh
-        run: |
-          curl https://ipinfo.io/ip
+        run: curl https://ipinfo.io/ip
 
       - name: Test GitHub Actions Connectivity to VPC-Router on ZeroTier network
-        shell: pwsh
         run: |
           ping -c 10 10.147.17.85
 
       - name: Test GitHub Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
-        shell: pwsh
         run: |
-          ping -c 10 10.98.10.230
+          ping -c 10.98.10.230
 
 
 
