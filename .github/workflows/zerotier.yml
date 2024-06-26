@@ -35,6 +35,10 @@ jobs:
             "Content-Type" = "application/json"
           }
 
+          Write-Output "Network ID: $networkId"
+          Write-Output "Client ID: $ClientId"
+          Write-Output "API URL: $Uri"
+
           # Check if Client ID exists in the network
           try {
             $member = Invoke-RestMethod -Uri $Uri -Headers $Headers -Method Get
@@ -68,7 +72,7 @@ jobs:
 
       - name: Test GitHub Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
         run: |
-          ping -c 10.98.10.230
+          ping -c 10 10.98.10.230
 
 
 
