@@ -64,15 +64,24 @@ jobs:
           }
 
       - name: Get the GitHub Actions runner's IP address
+        shell: pwsh
         run: curl https://ipinfo.io/ip
 
       - name: Test GitHub Actions Connectivity to VPC-Router on ZeroTier network
+        shell: pwsh
         run: |
           ping -c 10 10.147.17.85
 
       - name: Test GitHub Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
+        shell: pwsh
         run: |
           ping -c 10 10.98.10.230
+          ping -c 5 ip-10-98-10-230.ec2.internal
+
+      - name: Test DNS Resolution Against Route 53 Resolver Using Github Actions
+        shell: pwsh
+        run: |
+          ping -c 5 ip-10-98-10-230.ec2.internal
 
 
 
