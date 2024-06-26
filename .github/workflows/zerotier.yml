@@ -36,7 +36,7 @@ jobs:
 
           # Check if Client ID exists in the network
           try {
-            $memberUri = "https://my.zerotier.com/api/network/$networkId/member/$ClientId"
+            $memberUri = "https://my.zerotier.com/api/v1/network/$networkId/member/$ClientId"
             $member = Invoke-RestMethod -Uri $memberUri -Headers $Headers -Method Get
             $existingMember = $member.id -eq $ClientId
           } catch {
