@@ -69,7 +69,7 @@ jobs:
       - name: Test Github Actions Connectivity to VPC-Router on Zerotier network
         shell: pwsh
         run: |
-          ping -c 10 192.168.196.98
+          ping -c 10 192.168.191.85
 
       - name: Test Github Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
         shell: pwsh
