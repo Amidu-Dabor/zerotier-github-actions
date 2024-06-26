@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install ZeroTier Client
+        shell: pwsh
         run: |
           echo "Installing ZeroTier Client"
           curl -s https://install.zerotier.com | sudo bash
@@ -29,7 +30,7 @@ jobs:
           # Prepare API request parameters
           $networkId = "${{ secrets.ZEROTIER_NETWORKID }}"
           $apiKey = "${{ secrets.ZEROTIER_API_KEY }}"
-          $membersUri = "https://api.zerotier.com/api/v1/network/$networkId/member/$ClientId"
+          $membersUri = "https://my.zerotier.com/api/network/$networkId/member/$ClientId"
           $Headers = @{
             "Authorization" = "Bearer $apiKey"
           }
@@ -62,19 +63,21 @@ jobs:
             Invoke-RestMethod -Uri $membersUri -Headers $Headers -Body $Body -Method Post
           }
 
-      - name: Get the Github Actions runner's IP address
+      - name: Get the GitHub Actions runner's IP address
         shell: pwsh
-        run: curl https://ipinfo.io/ip
+        run: |
+          curl https://ipinfo.io/ip
 
-      - name: Test Github Actions Connectivity to VPC-Router on Zerotier network
+      - name: Test GitHub Actions Connectivity to VPC-Router on ZeroTier network
         shell: pwsh
         run: |
           ping -c 10 192.168.191.85
 
-      - name: Test Github Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
+      - name: Test GitHub Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
         shell: pwsh
         run: |
           ping -c 10 10.98.10.230
+
 
 
 
