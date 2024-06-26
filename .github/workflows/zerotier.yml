@@ -74,7 +74,7 @@ jobs:
       - name: Test Github Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
         shell: pwsh
         run: |
-          ping -c 10 10.98.10.59
+          ping -c 10 10.98.10.230
 
 
 
