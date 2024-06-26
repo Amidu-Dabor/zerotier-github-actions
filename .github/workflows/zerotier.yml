@@ -57,7 +57,7 @@ jobs:
             sudo zerotier-cli join $networkId
 
             # Authorize the client
-            $Body = '{"config": {"authorized": true}}' | ConvertTo-Json
+            $Body = '{"config": {"authorized": true}}'
 
             Write-Output "Authorizing Client ID $ClientId"
             Invoke-RestMethod -Uri $Uri -Headers $Headers -Body $Body -Method Post
