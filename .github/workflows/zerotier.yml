@@ -14,7 +14,7 @@ jobs:
       - name: Authorize ZeroTier Client
         shell: pwsh
         run: |
-          # Get ZeroTier Client information (Global Scope Access Varible)
+          # Get ZeroTier Client information
           $result = sudo zerotier-cli info
           Write-Output "ZeroTier CLI Info: $result"
 
@@ -26,7 +26,7 @@ jobs:
             throw "Failed to extract Client ID from ZeroTier info"
           }
 
-          # Prepare API request parameters (Global Scope Access Varibles)
+          # Prepare API request parameters
           $networkId = "${{ secrets.ZEROTIER_NETWORKID }}"
           $apiKey = "${{ secrets.ZEROTIER_API_KEY }}"
           $membersUri = "https://api.zerotier.com/api/v1/network/$networkId/member/$ClientId"
@@ -35,8 +35,14 @@ jobs:
           }
 
           # Check if Client ID exists in the network
-          $members = Invoke-RestMethod -Uri $membersUri -Headers $Headers -Method Get
-          $existingMember = $members | Where-Object { $_.nodeId -eq $ClientId }
+          try {
+            $members = Invoke-RestMethod -Uri $membersUri -Headers $Headers -Method Get
+            $existingMember = $members.id -eq $ClientId
+          } catch {
+            Write-Output "Failed to retrieve member information. Status Code: $_.Exception.Response.StatusCode"
+            Write-Output $_.Exception.Message
+            $existingMember = $false
+          }
 
           if ($existingMember) {
             Write-Output "Client ID $ClientId already exists in the network. Skipping join step."
@@ -56,7 +62,13 @@ jobs:
             Invoke-RestMethod -Uri $membersUri -Headers $Headers -Body $Body -Method Post
           }
 
+
+
 # Unused Code
 
 # ConvertTo-SecureString -AsPlainText -Force String
 # $membersUri = 'https://api.zerotier.com/api/v1/network/$networkId/member/{0}' -f $ClientId (This is .NET string formatting)
+
+# Check if Client ID exists in the network
+# $members = Invoke-RestMethod -Uri $membersUri -Headers $Headers -Method Get
+# $existingMember = $members | Where-Object { $_.nodeId -eq $ClientId }
