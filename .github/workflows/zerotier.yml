@@ -32,7 +32,7 @@ jobs:
           $Uri = "https://api.zerotier.com/api/v1/network/$networkId/member/$ClientId"
           $Headers = @{
             "Authorization" = "Bearer $apiKey"
-            "Content-Type" = "application/json"
+            "Content-Type"  = "application/json"
           }
 
           Write-Output "Network ID: $networkId"
@@ -57,7 +57,7 @@ jobs:
             sudo zerotier-cli join $networkId
 
             # Authorize the client
-            $Body = '{"config": {"authorized": true}}'
+            $Body = '{"config": {"authorized": true}}' | ConvertTo-Json
 
             Write-Output "Authorizing Client ID $ClientId"
             Invoke-RestMethod -Uri $Uri -Headers $Headers -Body $Body -Method Post
