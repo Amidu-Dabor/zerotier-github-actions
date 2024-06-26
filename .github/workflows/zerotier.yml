@@ -29,7 +29,7 @@ jobs:
           # Prepare API request parameters
           $networkId = "${{ secrets.ZEROTIER_NETWORKID }}"
           $apiKey = "${{ secrets.ZEROTIER_API_KEY }}"
-          $Uri = "https://my.zerotier.com/api/v1/network/$networkId/member/$ClientId"
+          $Uri = "https://api.zerotier.com/api/v1/network/$networkId/member/{0}" -f $ClientId
           $Headers = @{
             "Authorization" = "Bearer $apiKey"
           }
