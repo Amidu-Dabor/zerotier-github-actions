@@ -90,7 +90,7 @@ jobs:
       - name: Test Connectivity to Amazon RDS
         shell: pwsh
         run: |
-          $mysqlPassword = ${{ secrets.MYSQL_PASSWORD }}
+          $mysqlPassword = "${{ secrets.MYSQL_PASSWORD }}"
           $dbHostEndpoint = "database-1.cvm4ii6kq7xb.us-east-1.rds.amazonaws.com"
           mysql --user admin --password=$mysqlPassword --host $dbHostEndpoint --execute='CREATE DATABASE IF NOT EXISTS; SHOW DATABASES;'
 
