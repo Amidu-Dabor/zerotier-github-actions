@@ -75,7 +75,7 @@ jobs:
       - name: Test GitHub Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
         shell: pwsh
         run: |
-          ping -c 10 10.98.10.230
+          ping -c 10 10.98.10.148
 
       - name: Test DNS Resolution Against Route 53 Resolver - 1
         shell: pwsh
