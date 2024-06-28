@@ -70,12 +70,12 @@ jobs:
       - name: Test GitHub Actions Connectivity to VPC-Router on ZeroTier network
         shell: pwsh
         run: |
-          ping -c 10 10.147.17.85
+          ping -c 5 10.147.17.85
 
       - name: Test GitHub Actions Connectivity to EC2(Router) Private IPv4 Address in AWS VPC
         shell: pwsh
         run: |
-          ping -c 10 10.98.10.148
+          ping -c 5 10.98.10.148
 
       - name: Test DNS Resolution Against Route 53 Resolver - 1
         shell: pwsh
