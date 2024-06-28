@@ -80,12 +80,12 @@ jobs:
       - name: Test DNS Resolution Against Route 53 Resolver - 1
         shell: pwsh
         run: |
-          nslookup ip-10-98-10-230.ec2.internal 10.98.20.144
+          nslookup ip-10-98-10-148.ec2.internal 10.98.20.144
 
       - name: Test DNS Resolution Against Route 53 Resolver - 2
         shell: pwsh
         run: |
-          nslookup ip-10-98-10-230.ec2.internal 10.98.21.175
+          nslookup ip-10-98-10-148.ec2.internal 10.98.21.175
 
       - name: Test Connectivity to Amazon RDS
         shell: pwsh
